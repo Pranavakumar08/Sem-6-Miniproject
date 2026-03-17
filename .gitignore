@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment & secrets
+.env
+
+# Streamlit temp uploads
+tmp_uploads/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# IDE / editor
+.cursor/
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/

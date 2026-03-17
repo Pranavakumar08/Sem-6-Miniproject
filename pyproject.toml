@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tarapath"
+version = "0.1.0"
+description = "Sky-photo based ship position estimator using celestial navigation."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "astropy",
+    "pandas",
+    "opencv-python",
+    "pillow",
+    "requests",
+    "python-dotenv",
+    "numpy",
+]
+
+[project.optional-dependencies]
+app = ["streamlit", "folium"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tarapath_core*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
