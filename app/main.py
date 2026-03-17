@@ -40,7 +40,7 @@ def render_map(lat: float, lon: float, radius_km: float) -> None:
 uploaded_file = st.file_uploader("Upload a night-sky image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    st.image(uploaded_file, caption="Uploaded sky image", use_column_width=True)
+    st.image(uploaded_file, caption="Uploaded sky image", use_container_width=True)
 
     # Save to a temp path so we can read EXIF immediately
     tmp_dir = Path("tmp_uploads")

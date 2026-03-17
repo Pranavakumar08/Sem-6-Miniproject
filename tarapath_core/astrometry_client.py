@@ -5,6 +5,27 @@ import time
 from pathlib import Path
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+
+def _build_session() -> requests.Session:
+    """Build a requests Session with retry logic and a browser-like User-Agent."""
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (compatible; Tarapath/0.1; +https://github.com/tarapath)",
+    })
+    retry = Retry(
+        total=3,
+        backoff_factor=1.0,
+        status_forcelist=[500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
 
 
 @dataclass
@@ -38,7 +59,7 @@ class AstrometryClient:
         self.api_url = api_url.rstrip("/")
         self.api_key = api_key
         self.timeout_sec = timeout_sec
-        self.session = requests.Session()
+        self.session = _build_session()
         self.session_id: Optional[str] = None
 
     def _login(self) -> None:
