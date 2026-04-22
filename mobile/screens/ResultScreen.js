@@ -75,6 +75,14 @@ export default function ResultScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {result.diagnostics?.fallback && (
+        <View style={styles.fallbackBanner}>
+          <Text style={styles.fallbackIcon}>⚠</Text>
+          <Text style={styles.fallbackText}>
+            Plate solve failed. Showing estimated fallback position.
+          </Text>
+        </View>
+      )}
       <View style={styles.resultHeader}>
         <Text style={styles.monoTitle}>LAT: {latitude.toFixed(4)}°</Text>
         <Text style={styles.monoTitle}>LON: {longitude.toFixed(4)}°</Text>
@@ -127,6 +135,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0a0e1a',
+  },
+  fallbackBanner: {
+    flexDirection: 'row',
+    backgroundColor: '#ff9800',
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fallbackIcon: {
+    fontSize: 20,
+    marginRight: 8,
+  },
+  fallbackText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
   errorCenter: {
     flex: 1,

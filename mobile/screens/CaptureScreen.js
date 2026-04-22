@@ -47,9 +47,10 @@ export default function CaptureScreen({ navigation }) {
         clearInterval(timer);
         if (cameraRef.current) {
           try {
-            const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
-            navigation.replace('Loading', { 
+            const photo = await cameraRef.current.takePictureAsync({ quality: 1, exif: true });
+            navigation.replace('Metadata', { 
               photoUri: photo.uri,
+              exif: photo.exif,
               location: location
             });
           } catch (e) {

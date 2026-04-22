@@ -11,7 +11,7 @@ const MESSAGES = [
 ];
 
 export default function LoadingScreen({ route, navigation }) {
-  const { photoUri, location } = route.params;
+  const { photoUri, location, timestamp, tz_offset_hours, camera_tilt_deg } = route.params;
   const [messageIdx, setMessageIdx] = useState(0);
   const spinValue = useRef(new Animated.Value(0)).current;
   const abortController = useRef(new AbortController());
@@ -60,14 +60,9 @@ export default function LoadingScreen({ route, navigation }) {
         type
       });
 
-      // Format ISO without milliseconds for consistency
-      const now = new Date();
-      const isoString = now.toISOString().split('.')[0].replace('T', ' ');
-      formData.append('timestamp', isoString);
-      
-      const tzOffset = -(now.getTimezoneOffset() / 60);
-      formData.append('tz_offset_hours', tzOffset.toString());
-      formData.append('camera_tilt_deg', '5.0');
+      formData.append('timestamp', timestamp);
+      formData.append('tz_offset_hours', tz_offset_hours.toString());
+      formData.append('camera_tilt_deg', camera_tilt_deg.toString());
 
       if (location) {
         formData.append('last_lat', location.latitude.toString());
