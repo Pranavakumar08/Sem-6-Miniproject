@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Optional, Tuple
 from pathlib import Path
 
@@ -28,9 +28,26 @@ def read_exif_datetime(path: str) -> Optional[datetime]:
     if not dt_raw:
         return None
 
-    # EXIF format: "YYYY:MM:DD HH:MM:SS"
+    # Try to find exactly when this was taken relative to UTC
+    # Tag 36881 is OffsetTimeOriginal, 36880 is OffsetTime
+    offset_str = tag_map.get("OffsetTimeOriginal") or tag_map.get("OffsetTime") or exif.get(36881) or exif.get(36880)
+    
     try:
-        return datetime.strptime(dt_raw, "%Y:%m:%d %H:%M:%S")
+        dt = datetime.strptime(dt_raw, "%Y:%m:%d %H:%M:%S")
+        
+        if offset_str and isinstance(offset_str, str) and (offset_str.startswith('+') or offset_str.startswith('-')):
+            # Format: "+05:30" or "-04:00"
+            sign = 1 if offset_str[0] == '+' else -1
+            hours, minutes = map(int, offset_str[1:].split(':'))
+            td = timedelta(hours=hours, minutes=minutes)
+            tz = timezone(sign * td)
+            dt = dt.replace(tzinfo=tz)
+            # Normalize to pure UTC
+            return dt.astimezone(timezone.utc)
+        
+        # If no timezone is defined in EXIF, return it as naive (local time)
+        # The UI will then have to ask the user to specify the offset manually.
+        return dt
     except ValueError:
         return None
 
