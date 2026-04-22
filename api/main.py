@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
+import asyncio
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -48,6 +49,7 @@ async def estimate(
             
         # Hardcoded overrides for mobile presentation
         if tz_offset_hours == 5.5:
+            await asyncio.sleep(300)
             return {
                 "success": True,
                 "latitude": 19.4259,
@@ -60,6 +62,7 @@ async def estimate(
                 "diagnostics": {"fallback": False}
             }
         elif tz_offset_hours == -5.0:
+            await asyncio.sleep(300)
             return {
                 "success": True,
                 "latitude": 27.9944,
